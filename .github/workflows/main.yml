@@ -24,10 +24,29 @@ jobs:
           name: stats
           path: grs
 
-  push:
+  langs:
     permissions: write-all
     runs-on: ubuntu-latest
-    name: Push
+    name: Langs Card
+    steps:
+      - uses: actions/checkout@v3
+        name: Check out current commit
+      - uses: suisei-cn/actions-download-file@v1.3.0
+        id: langs
+        name: Download the langs file
+        with:
+          url: "https://github-stats-navalkumar007.vercel.app/api/top-langs/?username=navalkumar007&theme=gotham&hide_border=true&include_all_commits=true&count_private=true&layout=compact" # Put your own vercel instance URL here
+          target: grs
+          filename: langs.svg # Need to have the file name prepared as svg
+      - uses: actions/upload-artifact@master
+        with:
+          name: langs
+          path: grs
+
+  pushstats:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    name: Push Stats
     needs: [stats] # Put any jobs (card) needed here before we push
     steps:
       - uses: actions/download-artifact@master
@@ -38,6 +57,24 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: resource/grs # May change to your desired branch name, the final URL need to be updated if you change this
+          build_dir: grs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  pushlangs:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    name: Push Langs
+    needs: [langs] # Put any jobs (card) needed here before we push
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: langs
+          path: grs
+      - name: Push
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: resource/lang # May change to your desired branch name, the final URL need to be updated if you change this
           build_dir: grs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
