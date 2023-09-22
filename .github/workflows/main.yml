@@ -16,7 +16,7 @@ jobs:
         id: stats
         name: Download the stats file
         with:
-          url: "https://github-stats-navalkumar007.vercel.app/api?username=navalkumar007" # Put your own vercel instance URL here
+          url: "https://github-stats-navalkumar007.vercel.app/api?username=navalkumar007&rank_icon=github&hide=stars,issues&theme=gotham&hide_border=true&include_all_commits=true&count_private=true" # Put your own vercel instance URL here
           target: grs
           filename: stats.svg # Need to have the file name prepared as svg
       - uses: actions/upload-artifact@master
