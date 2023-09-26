@@ -42,6 +42,26 @@ jobs:
         with:
           name: langs
           path: grs
+          
+          
+  streaks:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    name: Streaks Card
+    steps:
+      - uses: actions/checkout@v3
+        name: Check out current commit
+      - uses: suisei-cn/actions-download-file@v1.3.0
+        id: streak
+        name: Download the streaks file
+        with:
+          url: "https://github-readme-streak-stats.herokuapp.com/?user=navalkumar007&include_all_commits=true&count_private=true&theme=gotham&hide_border=true" # Put your own vercel instance URL here
+          target: grs
+          filename: streaks.svg # Need to have the file name prepared as svg
+      - uses: actions/upload-artifact@master
+        with:
+          name: streaks
+          path: grs
 
   pushstats:
     permissions: write-all
@@ -75,6 +95,24 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: resource/lang # May change to your desired branch name, the final URL need to be updated if you change this
+          build_dir: grs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+  pushstreaks:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    name: Push Streaks
+    needs: [streaks] # Put any jobs (card) needed here before we push
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: streaks
+          path: grs
+      - name: Push
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: resource/streaks # May change to your desired branch name, the final URL need to be updated if you change this
           build_dir: grs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
